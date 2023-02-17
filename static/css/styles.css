@@ -1,0 +1,113 @@
+body{
+    background-color: #F7F7F7;
+}
+
+h1{
+    font-family: Serif;
+}
+
+.bg{
+    background-color: #fff;
+    height: 75vh;
+    width: 75%;
+    margin: 5vh auto;
+    padding-top: 1vh;
+    box-shadow: 6px 3px 5px #B2B2B2;
+}
+
+.dis{
+    border: black solid 2px;
+    border-radius: 10%;
+    display: inline-block;
+    min-width: 75vh;
+    max-height: 51vh;
+    background-color: #F7F7F7;
+    box-shadow: 6px 3px 5px #B2B2B2;
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.di{
+    display: inline-block;
+    height: 100%;
+
+}
+
+.new-di{
+    height: 100%;
+    margin: 0 3vh;
+    padding-top: 15vh;
+}
+
+.space{
+    display: inline-block;
+    width:10%
+}
+
+.spacer{
+    width: 34%;
+}
+
+.dragndrop{
+    display: block;
+    max-width: 100%;
+    height: 50vh;
+    margin: auto;
+}
+
+.absolute-left-30{
+    position: absolute;
+    left: 30%
+}
+
+.absolute-left-69{
+    position: absolute;
+    left: 69%
+}
+.btn {
+    border-radius: 12px;
+}
+
+.btn-dark{
+    position: absolute;
+    top: 80vh;
+    left: 37%;
+}
+
+.btn-info{
+    position: absolute;
+    top: 80vh;
+    right: 31%;
+}
+
+.color{
+    width: 30%;
+    height: 13%;
+    border: 2px solid black;
+    margin: 5vh auto 0;
+}
+
+.color-text{
+    width: 20vh;
+    height: 3.5vh;
+    border: 2px solid #B2B2B2;
+    margin: auto;
+    text-align:center;
+    font-size: 2vh;
+}
+
+.new-color{
+    height: 12vh;
+    width: 12vh;
+}
+
+.inlineblock{
+    display: inline-block;
+}
+
+.block{
+    display: block;
+}

@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="d-flex justify-content-center mt-3">Find most common colors</h1>
+
+<div class="bg">
+    <div class="d-flex justify-content-center mt-5">
+        <div class="inlineblock">
+            <div class="dis" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+                <img src="../static/images/dragndrop.png" class="dragndrop">
+            </div>
+            <button id="upload-btn" class="btn btn-dark block mx-auto">Upload image</button>
+        </div>
+            <div class="space"></div>
+
+        <div class="inlineblock">
+            <div class="di inlineblock">
+                <div class="color"></div>
+                <div class="m-2 color-text"></div>
+                <div class="color"></div>
+                <div class="mt-2 color-text"></div>
+                <div class="color"></div>
+                <div class="mt-2 mb-5 color-text"></div>
+            </div>
+<!--            <div class="inlineblock new-di">-->
+<!--                <div class="color new-color"></div>-->
+<!--                <div class="mt-2 color-text"></div>-->
+<!--            </div>-->
+<!--            <button class="btn btn-info block mx-auto">Choose color</button>-->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- script wrote after 2 hours chatting with chatGPT -->
+<script>
+function updateColors(image) {
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  var width = image.width;
+  var height = image.height;
+  canvas.width = width;
+  canvas.height = height;
+  context.drawImage(image, 0, 0, width, height);
+  var imageData = context.getImageData(0, 0, width, height);
+  var data = imageData.data;
+  var colorMap = {};
+  var maxColor1 = {color: '', count: 0};
+  var maxColor2 = {color: '', count: 0};
+  var maxColor3 = {color: '', count: 0};
+  for (var i = 0; i < data.length; i += 4) {
+    var r = data[i];
+    var g = data[i + 1];
+    var b = data[i + 2];
+    var a = data[i + 3];
+    if (a > 0) {
+      var color = r + ',' + g + ',' + b;
+      if (colorMap[color]) {
+        colorMap[color]++;
+      } else {
+        colorMap[color] = 1;
+      }
+      if (colorMap[color] > maxColor1.count) {
+        maxColor3.color = maxColor2.color;
+        maxColor3.count = maxColor2.count;
+        maxColor2.color = maxColor1.color;
+        maxColor2.count = maxColor1.count;
+        maxColor1.color = color;
+        maxColor1.count = colorMap[color];
+      } else if (colorMap[color] > maxColor2.count) {
+        maxColor3.color = maxColor2.color;
+        maxColor3.count = maxColor2.count;
+        maxColor2.color = color;
+        maxColor2.count = colorMap[color];
+      } else if (colorMap[color] > maxColor3.count) {
+        maxColor3.color = color;
+        maxColor3.count = colorMap[color];
+      }
+    }
+  }
+
+  var colorDivs = document.querySelectorAll('.color');
+  colorDivs[0].style.backgroundColor = 'rgb(' + maxColor1.color + ')';
+  colorDivs[1].style.backgroundColor = 'rgb(' + maxColor2.color + ')';
+  colorDivs[2].style.backgroundColor = 'rgb(' + maxColor3.color + ')';
+}
+
+
+function onDragOver(event) {
+  event.preventDefault();
+}
+
+
+function onDrop(event) {
+  event.preventDefault();
+  var files = event.dataTransfer.files;
+  handleFiles(files);
+}
+
+function handleFiles(files) {
+  var file = files[0];
+  var reader = new FileReader();
+  reader.onload = function(event) {
+    var image = document.createElement("img");
+    image.src = event.target.result;
+    image.onload = function() {
+      var dis = document.querySelector(".dis");
+      var widthRatio = dis.offsetWidth / this.width;
+      var heightRatio = dis.offsetHeight / this.height;
+      var ratio = Math.min(widthRatio, heightRatio);
+      var newWidth = this.width * ratio;
+      var newHeight = this.height * ratio;
+      this.width = newWidth;
+      this.height = newHeight;
+      this.style.borderRadius = "10%";
+      this.style.padding = "1vh";
+      dis.innerHTML = "";
+      dis.appendChild(this);
+      this.style.border = "3px solid #000";
+      this.style.boxSizing = "border-box";
+      getDominantColors(this);
+      dis.style.border = 'none';
+    };
+  };
+  reader.readAsDataURL(file);
+}
+
+
+var uploadBtn = document.getElementById("upload-btn");
+uploadBtn.addEventListener("click", function() {
+  var fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.addEventListener("change", function() {
+    var files = this.files;
+    handleFiles(files);
+  });
+  fileInput.click();
+});
+
+function getDominantColors(image) {
+  var colorThief = new ColorThief();
+  var colorPalette = colorThief.getPalette(image, 3);
+  var colorDivs = document.querySelectorAll(".color");
+  var colorTexts = document.querySelectorAll(".color-text");
+  for (var i = 0; i < colorPalette.length; i++) {
+    var color = colorPalette[i];
+    var colorDiv = colorDivs[i];
+    var colorText = colorTexts[i];
+    colorDiv.style.backgroundColor = "rgb(" + color.join(",") + ")";
+    colorText.textContent = "RGB(" + color.join(",") + ")";
+  }
+}
+
+
+</script>
+
+
+
+{% endblock %}
